@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0e14">
+<title>AntibioticGuard MY</title>
+<style>
+:root{--bg:#0b0e14;--card:#141923;--card2:#1a2130;--line:#252e3f;--fg:#e8ebf3;--mut:#8f99b0;--pri:#4cc9b0;--priT:#12332e;--red:#f87171;--redT:#3a1a1e;--amb:#fbbf24;--ambT:#3a2e10;--grn:#4ade80;--grnT:#12301d;--blu:#60a5fa;--bluT:#14263f;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:70px;-webkit-text-size-adjust:100%}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+#side{position:fixed;inset:0 auto 0 0;width:260px;background:var(--card);border-right:1px solid var(--line);z-index:40;padding:14px 10px calc(14px + env(safe-area-inset-bottom,0px));overflow-y:auto;transform:translateX(-102%);transition:transform .22s ease}
+#side.open{transform:none}#scrim{position:fixed;inset:0;background:#0009;z-index:30;display:none}#scrim.on{display:block}
+.brand{display:flex;gap:10px;align-items:center;padding:4px 8px 14px}.brand b{font-size:16px}.brand small{display:block;color:var(--mut);font-size:11px}
+.logo{width:36px;height:36px;border-radius:10px;background:var(--priT);color:var(--pri);display:grid;place-items:center;font-size:19px}
+#side button.nv{display:flex;width:100%;gap:10px;align-items:center;border:0;background:none;text-align:left;padding:11px 10px;border-radius:10px;color:var(--mut);font-weight:600;font-size:14px}
+#side button.nv.on{background:var(--priT);color:var(--pri)}#side button.nv span{width:22px;text-align:center}
+#top{position:sticky;top:0;z-index:20;background:#0b0e14ee;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:8px 12px;display:flex;gap:8px;align-items:center}
+#top .ic{border:1px solid var(--line);background:var(--card);border-radius:10px;width:42px;height:42px;font-size:18px}
+#q{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:16px}
+#main{max-width:680px;margin:0 auto;padding:12px 12px 90px}
+.mode{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:10px}
+.mode button{flex:1;border:0;background:none;padding:9px;border-radius:9px;font-weight:700;font-size:13px;color:var(--mut)}
+.mode button.on{background:var(--priT);color:var(--pri)}.mode button.on.ed{background:var(--redT);color:var(--red)}
+#net{display:none;background:var(--ambT);color:var(--amb);border:1px solid #5a4510;border-radius:10px;padding:8px 10px;margin-bottom:10px;font-size:12.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.card h2{font-size:15px;margin:0 0 10px}.card h3{font-size:13px;margin:12px 0 6px;color:var(--pri)}
+.sub{color:var(--mut);font-size:12.5px}
+.btn{border:1px solid var(--line);background:var(--card2);border-radius:10px;padding:10px 14px;font-weight:700;font-size:13.5px}
+.btn.p{background:var(--pri);border-color:var(--pri);color:#04201b}.btn.s{padding:6px 10px;font-size:12px}.btn:disabled{opacity:.45}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:8px}
+label.f{font-size:11.5px;font-weight:600;color:var(--mut);display:block}
+.in,select.in,textarea.in{width:100%;margin-top:3px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:16px}
+textarea.in{min-height:90px;resize:vertical}
+.chk{display:flex;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px;margin:6px 0;font-size:14px}
+.chk input{width:20px;height:20px;flex-shrink:0;accent-color:var(--pri)}
+.box{border-left:4px solid;border-radius:9px;padding:10px 12px;margin:8px 0;font-size:13.5px}
+.box.r{background:var(--redT);border-color:var(--red)}.box.a{background:var(--ambT);border-color:var(--amb)}.box.g{background:var(--grnT);border-color:var(--grn)}.box.b{background:var(--bluT);border-color:var(--blu)}.box.p{background:var(--priT);border-color:var(--pri)}
+.box b{display:block;margin-bottom:2px}
+ul.l{margin:4px 0 4px 18px;padding:0}ul.l li{margin:3px 0;font-size:13.5px}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:99px;padding:2px 9px;margin:2px 4px 2px 0}
+.t-r{background:var(--redT);color:var(--red)}.t-g{background:var(--grnT);color:var(--grn)}.t-a{background:var(--ambT);color:var(--amb)}.t-b{background:var(--bluT);color:var(--blu)}.t-p{background:var(--priT);color:var(--pri)}
+.item{border:1px solid var(--line);background:var(--card2);border-radius:12px;padding:11px 12px;margin:8px 0;cursor:pointer}
+.item b{font-size:14px}.item .sub{margin-top:2px}
+.score{font-size:34px;font-weight:800;line-height:1}
+.opt{display:block;width:100%;text-align:left;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:13px;margin:8px 0;font-weight:600;font-size:14px}
+.opt:active{border-color:var(--pri)}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}th{color:var(--mut);font-size:11.5px}
+.tw{overflow-x:auto}
+details{border:1px solid var(--line);border-radius:10px;padding:8px 11px;margin:6px 0;background:var(--card2)}summary{cursor:pointer;font-weight:700;font-size:13.5px}
+.out{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px;font-size:14px;min-height:46px}
+.msg{padding:10px 12px;border-radius:12px;margin:8px 0;font-size:14px;white-space:pre-wrap}.msg.u{background:var(--priT);margin-left:22px}.msg.a{background:var(--card2);border:1px solid var(--line);margin-right:10px}
+.pill{border:1px solid var(--line);background:var(--card2);border-radius:99px;padding:7px 12px;font-size:12.5px;font-weight:600}
+.hide{display:none!important}
+@media(min-width:960px){#side{transform:none}#scrim{display:none!important}#top,#main{margin-left:260px}#top{padding-left:20px}#main{max-width:760px;margin-left:calc(260px + (100vw - 260px - 760px)/2)}#menu{display:none}}
+@media print{#side,#top,.no-print{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<aside id="side" aria-label="Menu"></aside><div id="scrim"></div>
+<div id="top"><button class="ic" id="menu" aria-label="Menu">☰</button><input id="q" type="search" placeholder="Search disease, drug or symptom (e.g. UTI, cloxacillin)" aria-label="Search"><button class="ic" id="mic" title="Offline status" aria-label="Offline status">📶</button></div>
+<main id="main">
+<div class="mode no-print" id="mode"><button data-m="GP" class="on">🏥 GP clinic</button><button data-m="ED" class="">🚑 Emergency</button></div>
+<div id="net"></div>
+
+<section class="view" id="v-home"></section>
+<section class="view hide" id="v-throat"></section>
+<section class="view hide" id="v-cond"></section>
+<section class="view hide" id="v-flow"></section>
+<section class="view hide" id="v-dose"></section>
+<section class="view hide" id="v-allergy"></section>
+<section class="view hide" id="v-labs"></section>
+<section class="view hide" id="v-ai"></section>
+<section class="view hide" id="v-case"></section>
+<section class="view hide" id="v-refs"></section>
+</main>
+
+<script>
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i)};
+var esc=function(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+var MODE=LS.get("abg-mode","GP"),FORCE_OFF=LS.get("abg-off",false),CASE={items:[]};
+
+/* ================= DATA: conditions (NAG 2024 / MOH; see References) ================= */
+var C=[
+{id:"phar",n:"Acute sore throat / tonsillitis",o:"Throat & ENT",k:"pharyngitis centor strep tonsil throat gas",abx:"cond",
+ dx:["Use Modified Centor (McIsaac) score: tonsillar exudate/swelling, tender anterior nodes, fever >38°C, NO cough, age","Viral >80%: cough, coryza, hoarseness, conjunctivitis, diarrhoea, mouth ulcers","GAS pattern: sudden onset, exudate, tender nodes, fever, no cough"],
+ red:["Trismus, drooling, muffled voice, unilateral swelling: quinsy (ED/ENT)","Stridor, tripod posture, drooling: epiglottitis (ED, do not examine throat)","Grey adherent membrane, bull neck: diphtheria (notify, ED)","Immunosuppressed, rheumatic heart disease, persistent fever >5 d"],
+ a:["Modified Centor <3: NO antibiotic. Analgesia/antipyretic only.","Score ≥3 (NAG): Phenoxymethylpenicillin 500 mg q6h or 1 g q12h, 5–10 days (10 d if rheumatic-fever risk or age 3–21)","or Benzathine penicillin 1.2 MU IM once","Alternative: Amoxicillin 500 mg q8h","Allergy: Erythromycin ethylsuccinate 800 mg q12h"],
+ p:["Penicillin V 25–50 mg/kg/day in 4 doses (max 2 g/day) OR amoxicillin 50 mg/kg/day once or BD (max 1 g/day), 10 days","Non-severe allergy: cephalexin 25–50 mg/kg/day BD; severe: erythromycin ES 40–50 mg/kg/day BD"],
+ pearl:"Co-amoxiclav is not first line. Avoid amoxicillin if infectious mononucleosis is possible (rash). Throat swab culture is rarely available in Malaysian primary care.",ref:"NAG A10 §1.1, B9 §1, Pathway C3; McIsaac JAMA 2004"},
+{id:"deep",n:"Quinsy / epiglottitis / deep neck abscess (emergency)",o:"Throat & ENT",k:"peritonsillar abscess quinsy epiglottitis ludwig retropharyngeal airway stridor",abx:"yes",
+ dx:["Severe unilateral sore throat, trismus, hot-potato voice, uvula deviation","Neck swelling/stiffness, drooling, stridor, toxic appearance"],
+ red:["Airway threat: sit upright, O2, do not lie flat or agitate the child, call ED/anaesthetist"],
+ a:["Send to ED/ENT. Drainage/aspiration is the mainstay.","Quinsy: benzylpenicillin 2 MU IV q6h + metronidazole 500 mg IV q6–8h, or ampicillin/sulbactam 3 g IV q6h; allergy: clindamycin 600–900 mg IV q8h","Epiglottitis: ceftriaxone 2 g IV q24h (adult); child 50–75 mg/kg"],
+ p:["Epiglottitis: ceftriaxone 50–75 mg/kg IV daily (max 2 g) in ED"],pearl:"Priority is airway, not antibiotics.",ref:"NAG A10 §1.2–1.5, B9 §6"},
+{id:"aom",n:"Acute otitis media (AOM)",o:"Throat & ENT",k:"ear otitis media earache otalgia otorrhoea child",abx:"cond",
+ dx:["Acute otalgia/irritability + bulging TM or otorrhoea + middle-ear effusion","Red TM alone is not AOM"],
+ red:["Mastoid swelling/tenderness, facial palsy, meningism: refer","Infant <3 months with fever; immunosuppressed"],
+ a:["Adults: amoxicillin (usual 500 mg–1 g q8h for 5–7 d). Adult AOM text sits in Pathway C2 (image); verify."],
+ p:["Antibiotics not routine: give if <2 y, immunosuppressed or severe; otherwise analgesia and review at 48 h","Amoxicillin 80–90 mg/kg/day in 2–3 doses (max 1 g/dose)","Failure, amoxicillin in last 30 d, purulent conjunctivitis: amox-clav 14:1 80–90 mg/kg/day BD","Non-severe allergy: cefuroxime 30 mg/kg/day BD (max 1 g/day). Severe: erythromycin ES 40–50 mg/kg/day BD or azithromycin 10 mg/kg D1 then 5 mg/kg D2–5","Duration: <2 y 7–10 d; ≥2 y 5–7 d"],
+ pearl:"Pain control first (paracetamol). Watchful waiting is safe in healthy children ≥2 y.",ref:"NAG B9 §3, Pathway C2"},
+{id:"oe",n:"Otitis externa",o:"Throat & ENT",k:"swimmer ear canal otitis externa ear drops",abx:"topical",
+ dx:["Ear pain worse on tragus pull, canal swelling/discharge"],red:["Diabetic/elderly with severe pain, granulation tissue, cranial nerve palsy: malignant OE (ED/ENT)"],
+ a:["Diffuse: ofloxacin 0.3% otic 10 drops once daily × 7 d (± steroid drops if fungus not suspected); aural toilet","Localised (furuncle): cloxacillin 500 mg q6h or cephalexin 500 mg q6h × 5 d; allergy: clindamycin 600 mg q8h"],
+ p:["Ofloxacin 0.3% 5 drops daily × 7 d (1–12 y) or gentamicin 0.3% 3–4 drops TDS (not if perforated or grommets)"],pearl:"Keep dry. No aminoglycoside drops with a perforation.",ref:"NAG A10 §3.3–3.4, B9 §4"},
+{id:"abrs",n:"Acute rhinosinusitis",o:"Throat & ENT",k:"sinusitis sinus blocked nose facial pain rhinosinusitis",abx:"cond",
+ dx:["Bacterial only if: ≥10 days without improvement, OR severe onset (fever with purulent discharge ≥3 days), OR worsening after initial improvement","Bacterial is only 0.5–2%"],
+ red:["Periorbital swelling, visual change, severe headache, neurological signs: refer urgently"],
+ a:["No antibiotic for most cases","If criteria met: amoxicillin 500–1000 mg q8h or amoxicillin/clavulanate 625 mg q8h × 5 d","Allergy: doxycycline 100 mg q12h (pregnancy: azithromycin 500 mg × 3 d)","No improvement after 3 days: refer ENT"],
+ p:["Amoxicillin 80–90 mg/kg/day BD (max 2 g/day) × 5 d; non-severe allergy cefuroxime 30 mg/kg/day"],pearl:"Saline irrigation and analgesia first. Decongestants add little.",ref:"NAG A10 §2, B9 §2, Pathway C4"},
+{id:"bron",n:"Acute bronchitis / viral URTI / common cold",o:"Respiratory",k:"cough cold bronchitis sputum green phlegm flu urti",abx:"no",
+ dx:["Cough <3 weeks with no focal chest signs, normal vitals","Purulent/green sputum comes from neutrophil enzymes and does not mean bacteria"],
+ red:["SpO2 <94%, RR >24, HR >100, T ≥38 with focal signs: do CXR (pneumonia)","Haemoptysis, weight loss, cough >3 weeks: TB work-up","Think: influenza, COVID-19, pertussis, dengue in a febrile patient"],
+ a:["NO antibiotic in a healthy adult. Explain it to the patient: antibiotics do not shorten viral cough and cause harm.","Give: fluids, honey, analgesia; safety-net advice and a 'return if' sheet"],
+ p:["No antibiotics. Viral causes dominate; avoid cough/cold medicines in young children"],pearl:"Delayed-prescription is not recommended in bronchitis without risk factors; focus on explanation.",ref:"NAG Pathway C1; AWaRe"},
+{id:"cap",n:"Community-acquired pneumonia (adult, outpatient)",o:"Respiratory",k:"pneumonia cap chest infection crackles curb-65",abx:"yes",
+ dx:["Fever, cough, dyspnoea/pleuritic pain + focal crackles; infiltrate on CXR confirms","Check CURB-65: Confusion, Urea >7, RR ≥30, BP ≤90/60, Age ≥65. 0–1 outpatient; 2 consider admission; ≥3 admit/ICU","CRB-65 works without urea"],
+ red:["SpO2 <92%, RR ≥30, SBP <90, confusion, multilobar: admit","Prolonged symptoms or TB risk: sputum AFB/CXR","Melioidosis in diabetics/farmers (refer)"],
+ a:["No comorbidity: amoxicillin 500 mg–1 g q8h × 5–7 d; alt doxycycline 100 mg q12h","Comorbidity (heart, lung, liver, renal disease, DM, alcohol, malignancy, asplenia): amoxicillin/clavulanate 625 mg q8h × 5–7 d ± azithromycin 500 mg daily × 3 d or doxycycline if atypical suspected","Antibiotic allergy: levofloxacin 750 mg daily × 5 d (reserve)"],
+ p:[],pearl:"CURB-65 supports, not replaces, judgement. Review at 48 h.",ref:"NAG A11 §1.1–1.2"},
+{id:"capp",n:"Pneumonia in children (outpatient)",o:"Respiratory",k:"child pneumonia paediatric fast breathing cough fever",abx:"yes",
+ dx:["Fast breathing for age, chest indrawing, grunting, SpO2 <92%: admit","Viral more common in young children"],
+ red:["Not feeding, lethargic, SpO2 <92%, severe respiratory distress, age <3 months, not fully immunised: admit"],
+ a:[],
+ p:["High-dose amoxicillin 80–90 mg/kg/day in 2–3 doses (max 1 g/dose, 3 g/day) × 5 d (until afebrile 2–3 d)","Weight bands: 3–5 kg 250 mg q12h; 6–9 kg 375 mg q12h; 10–14 kg 500 mg q12h; 15–19 kg 750 mg q12h; ≥20 kg 500 mg q8h or 1 g q12h","Erythromycin ES 40–50 mg/kg/day BD if atypical suspected (macrolide resistance is common in Asia)","Failure on oral amoxicillin: refer"],
+ pearl:"WHO endorses weight bands to cut errors; the doses are safe given amoxicillin's wide margin.",ref:"NAG B10 §1.1"},
+{id:"aecopd",n:"COPD exacerbation (infective)",o:"Respiratory",k:"copd exacerbation wheeze purulent sputum aecopd",abx:"cond",
+ dx:["Antibiotic only if increased sputum PURULENCE plus increased volume or dyspnoea (or ventilated)"],red:["Respiratory failure, confusion, cyanosis: admit"],
+ a:["Amoxicillin/clavulanate 625 mg q8h × 5 d; alt cefuroxime 500 mg q12h or doxycycline 100 mg q12h × 5 d","Plus bronchodilators and prednisolone per COPD protocol"],p:[],pearl:"No purulence means no antibiotic.",ref:"NAG A11 §4.1"},
+{id:"flu",n:"Influenza",o:"Respiratory",k:"influenza flu oseltamivir tamiflu",abx:"antiviral",
+ dx:["Sudden fever, myalgia, cough in season/outbreak"],red:["Pregnancy, age ≥65, chronic disease, hypoxia: treat early and consider admission"],
+ a:["Oseltamivir 75 mg q12h × 5 d, best within 48 h (hospitalised/immunocompromised: regardless of duration)","COVID-19: follow MOH COVID-19 management annex"],
+ p:["Oseltamivir <9 mo 3 mg/kg q12h; 9–11 mo 3.5 mg/kg; 1–12 y: ≤15 kg 30 mg, >15–23 kg 45 mg, >23–40 kg 60 mg, >40 kg 75 mg, q12h × 5 d"],pearl:"No antibiotics for uncomplicated influenza.",ref:"NAG A11 §2.2, B10"},
+{id:"cys",n:"Uncomplicated cystitis",o:"Urinary",k:"uti cystitis dysuria frequency urgency bladder nitrofurantoin",abx:"yes",
+ dx:["Dysuria, frequency, urgency, suprapubic pain; afebrile; no flank pain or vaginal discharge","Dipstick: nitrite/leucocyte esterase positive. Pyuria alone with no symptoms is not UTI"],
+ red:["Fever, rigors, flank pain, vomiting: pyelonephritis","Pregnancy, men, catheter, diabetes, renal impairment: complicated. Send culture"],
+ a:["Nitrofurantoin 100 mg q12h (sustained-release) or 50–100 mg q6h (macrocrystals) × 3–5 d (avoid if GFR <30 or in 3rd trimester)","or amoxicillin/clavulanate 625 mg q8h; alt cephalexin 500 mg q12h, cefuroxime 250–500 mg q12h, or fosfomycin 3 g once (E. coli only)","Do NOT use TMP-SMX empirically (local resistance >30%) or amoxicillin/ampicillin alone"],
+ p:["Children: send urine culture first; refer if <3 months, febrile or unwell"],pearl:"Fluoroquinolones are not first line for simple cystitis. Do not treat asymptomatic bacteriuria.",ref:"NAG A17 §2, Pathway C7"},
+{id:"pyelo",n:"Pyelonephritis / complicated UTI",o:"Urinary",k:"pyelonephritis flank pain fever urosepsis catheter complicated uti",abx:"yes",
+ dx:["Fever, flank pain/CVA tenderness, vomiting, bacteraemia, catheter, male UTI, prostatitis"],
+ red:["qSOFA ≥2, SBP ≤100, RR ≥22, confusion: urosepsis. Resuscitate and send to ED","Obstruction/stone, pregnancy, immunosuppression: admit"],
+ a:["NAG lists IV therapy: amoxicillin/clavulanate 1.2 g IV q6–8h or ampicillin/sulbactam; alt ceftriaxone 2 g IV q24h, cefuroxime. 5–7 d total","Take urine culture and blood culture BEFORE antibiotics. Step down to oral by culture once afebrile >48 h","Acute prostatitis (outpatient): ciprofloxacin 500–750 mg q12h, 10–14 d or longer"],
+ p:[],pearl:"Send culture first. Oral step-down must follow susceptibility.",ref:"NAG A17 §3–4, §7"},
+{id:"abu",n:"Asymptomatic bacteriuria",o:"Urinary",k:"asymptomatic bacteriuria positive urine no symptoms",abx:"no",
+ dx:["Positive culture (≥10⁵ cfu/mL) without urinary symptoms"],red:[],
+ a:["Do NOT treat, except: pregnancy (5 days) and before urological procedures breaching mucosa (3–5 d)","Do not screen or treat in post-menopausal women, elderly institutionalised, catheterised patients, diabetes alone"],p:[],pearl:"Treating bacteriuria without symptoms causes resistance and no benefit.",ref:"NAG A17 §1"},
+{id:"cell",n:"Cellulitis / erysipelas",o:"Skin & soft tissue",k:"cellulitis erysipelas red swollen skin leg cloxacillin",abx:"yes",
+ dx:["Spreading warm erythema, tender, ill-defined edge. Mild = no systemic signs; moderate = SIRS; severe = SIRS + hypotension","Look for portal of entry: tinea pedis, ulcer, lymphoedema"],
+ red:["Pain out of proportion, bullae, crepitus, rapidly spreading, skin necrosis, shock: necrotising fasciitis (surgical emergency)","SIRS, diabetes with foot ulcer, face/orbit, immunosuppressed: admit"],
+ a:["Mild: cloxacillin 500 mg q6h (1 h before or 2 h after food), or cephalexin 1 g q12h, or amoxicillin 500 mg q8h; × 5–10 d","Alt: amoxicillin/clavulanate 625 mg q8h, cefuroxime 500 mg q12h","Erysipelas: penicillin V 500 mg q6h or amoxicillin 500 mg q8h × 5 d","CA-MRSA suspected: clindamycin 300 mg q6h or TMP-SMX 160/800 mg q12h","Recurrent (3–4/yr): prophylaxis penicillin V 250 mg q12h"],
+ p:["Cloxacillin about 12.5–25 mg/kg QID (verify local protocol)"],pearl:"Mark the margin with a pen and review in 48 h. Elevate the limb.",ref:"NAG A14 §2.3, §2.5"},
+{id:"imp",n:"Impetigo",o:"Skin & soft tissue",k:"impetigo school sores crusted honey blisters bullous",abx:"cond",
+ dx:["Honey-coloured crusts or bullae, mainly children"],red:["Systemic illness, widespread lesions, immunosuppressed, post-strep glomerulonephritis signs"],
+ a:["Localised: topical fusidic acid 2% q8–12h or mupirocin 2% q8h × 5 d","Widespread: cloxacillin 500 mg q6h or cephalexin 1 g q12h × 5–7 d; allergy: erythromycin ES 800 mg q12h"],p:["Topical for localised disease; exclude from school until lesions are dry or 48 h on treatment"],pearl:"Keep topical antibiotic courses short (5 days) to avoid resistance.",ref:"NAG A14 §2.1–2.2"},
+{id:"abs",n:"Skin abscess / boil / furuncle",o:"Skin & soft tissue",k:"abscess boil furuncle carbuncle pus drain",abx:"cond",
+ dx:["Fluctuant tender swelling with pus"],red:["Face/danger triangle, hands, perianal, SIRS, diabetes, immunosuppressed"],
+ a:["Incision and drainage is the main treatment","Antibiotic only if cellulitis, SIRS or immunosuppressed: cloxacillin 500 mg q6h × 5 d (alt amoxicillin/clavulanate 625 mg q8h)"],p:[],pearl:"Warm compress; culture the pus if recurrent (MRSA).",ref:"NAG A14 §1"},
+{id:"bite",n:"Animal / human bite",o:"Skin & soft tissue",k:"bite dog cat monkey human rabies tetanus wound",abx:"cond",
+ dx:["Irrigate and debride all broken-skin bites. Check tetanus and rabies exposure"],
+ red:["Monkey/macaque bite or scratch (also acyclovir), rabies-risk animal, deep puncture near joint/bone, hand/face/genital injury, crush injury"],
+ a:["Prophylaxis (human, cat, >8 h delay, deep puncture, crush, immunocompromised): amoxicillin/clavulanate 625 mg q8h × 3 d","Infected wound: same drug × 5 d","Monkey (macaque): add acyclovir 800 mg 5×/day × 14 d","Allergy: doxycycline 200 mg D1 then 100–200 mg daily; or cefuroxime 500 mg q12h + metronidazole 400 mg q8h"],
+ p:["Co-amoxiclav weight-based per local protocol; refer deep wounds"],pearl:"Wound washing for 15 min is the first treatment. Tetanus toxoid and rabies advice (MOH).",ref:"NAG A14 §2.6"},
+{id:"age",n:"Acute gastroenteritis / diarrhoea",o:"Gastrointestinal",k:"diarrhoea gastroenteritis vomiting ors dehydration cholera dysentery typhoid",abx:"no",
+ dx:["Acute watery diarrhoea ± vomiting; assess dehydration"],
+ red:["Blood in stool with fever (dysentery), rice-water stool (cholera: notify), severe dehydration, immunosuppression, travel, suspected typhoid","Child <6 months, lethargy, sunken fontanelle, no urine 8 h: ED"],
+ a:["No antibiotics for acute watery diarrhoea. ORS is the cornerstone; continue feeding.","Antibiotics only for severe dysentery, cholera or confirmed pathogen; send stool culture (NAG Pathway C5; verify)"],
+ p:["ORS after each loose stool; zinc 10–20 mg daily × 10–14 d (WHO)"],pearl:"Antimotility drugs are not for bloody diarrhoea or young children.",ref:"NAG Pathway C5; WHO"},
+{id:"fev",n:"Fever with leucopenia / low platelets (think dengue)",o:"Tropical",k:"dengue fever platelets leucopenia ns1 leptospirosis typhoid melioidosis",abx:"no",
+ dx:["Febrile with headache, myalgia, retro-orbital pain, rash; leucopenia and falling platelets"],
+ red:["Warning signs: abdominal pain, persistent vomiting, bleeding, lethargy, rising HCT: refer (Dengue CPG)"],
+ a:["Check FBC and dengue NS1 before reflex antibiotics. Avoid NSAIDs/aspirin; paracetamol only","Consider leptospirosis (water exposure), typhoid, melioidosis (diabetic), malaria"],p:["Paracetamol only; no NSAIDs"],pearl:"Antibiotics do not treat dengue.",ref:"MOH Dengue CPG; NAG A16"},
+{id:"den",n:"Dental / dentoalveolar abscess",o:"Dental",k:"tooth dental abscess toothache gum swelling",abx:"cond",
+ dx:["Dental pain, gum swelling, fever"],red:["Facial swelling, trismus, floor-of-mouth swelling, dysphagia: ED (Ludwig)"],
+ a:["Dental drainage/extraction is the cure. Antibiotics only with spread or systemic signs","Typical: amoxicillin 500 mg q8h ± metronidazole 400 mg q8h × 5 d (taken from the supplied project; verify against NAG A8)"],p:[],pearl:"Refer to a dentist the same day.",ref:"NAG A8 (verify)"}
+];
+var ORG=["Throat & ENT","Respiratory","Urinary","Skin & soft tissue","Gastrointestinal","Tropical","Dental"];
+
+/* ================= DATA: flowcharts ================= */
+var FL=[
+{id:"th",t:"Sore throat",s:"s0",n:{
+ s0:{q:"Any airway or deep-neck red flag? (stridor, drooling, trismus, muffled voice, unilateral swelling, grey membrane, toxic)",o:[["Yes",null,{k:"r",t:"Emergency",x:"Keep upright, O2, call ED/ENT. Do not lie flat. Quinsy/epiglottitis/diphtheria: IV antibiotics in hospital."}],["No","s1"]]},
+ s1:{q:"Modified Centor score?",h:"Exudate +1, tender anterior nodes +1, fever +1, no cough +1; age 3–14 +1, 15–44 0, ≥45 −1",o:[["≤2 (low)",null,{k:"g",t:"No antibiotic",x:"Viral likely (>80%). Analgesia, fluids, explain. Return if worse, trismus, or no improvement in 5–7 d."}],["≥3 (NAG: treat)","s2"]]},
+ s2:{q:"Penicillin allergy?",o:[["No",null,{k:"a",t:"Penicillin V 500 mg q6h (or 1 g q12h) 5–10 d",x:"Or benzathine penicillin 1.2 MU IM once; alternative amoxicillin 500 mg q8h. Use 10 days if rheumatic-fever risk or age 3–21."}],["Yes",null,{k:"a",t:"Erythromycin ethylsuccinate 800 mg q12h",x:"Run the Allergy tab (PEN-FAST). Many 'allergic' patients tolerate penicillin."}]]}}},
+{id:"co",t:"Cough / chest",s:"c0",n:{
+ c0:{q:"Danger signs? SpO2 <92%, RR ≥30, SBP <90, confusion, cyanosis, haemoptysis",o:[["Yes",null,{k:"r",t:"Admit / ED",x:"Oxygen, IV access, sepsis bundle if qSOFA ≥2. CXR."}],["No","c1"]]},
+ c1:{q:"Focal chest signs or fever ≥38 with HR >100 / RR >24?",o:[["Yes","c2"],["No",null,{k:"g",t:"Bronchitis / viral URTI: no antibiotic",x:"Purulent sputum is not evidence of bacteria. Fluids, honey, analgesia, safety-net. Cough >3 weeks: TB/asthma/GERD work-up."}]]},
+ c2:{q:"CXR infiltrate (or high clinical suspicion)? CURB-65 / CRB-65?",o:[["Score 0–1","c3"],["Score ≥2",null,{k:"r",t:"Admit",x:"CURB-65 2: consider admission; ≥3: admit, consider ICU."}]]},
+ c3:{q:"Comorbidity (heart, lung, liver, renal disease, DM, alcohol, malignancy)?",o:[["No",null,{k:"a",t:"Amoxicillin 500 mg–1 g q8h × 5–7 d",x:"Alt: doxycycline 100 mg q12h. Review at 48 h."}],["Yes",null,{k:"a",t:"Amoxicillin/clavulanate 625 mg q8h × 5–7 d",x:"± azithromycin 500 mg × 3 d or doxycycline if atypical. Allergy: levofloxacin 750 mg daily × 5 d."}]]}}},
+{id:"ur",t:"Dysuria / UTI",s:"u0",n:{
+ u0:{q:"Fever, flank pain, rigors, vomiting, male, catheter or pregnancy?",o:[["Yes","u1"],["No","u2"]]},
+ u1:{q:"qSOFA ≥2, SBP ≤100, RR ≥22 or confusion?",o:[["Yes",null,{k:"r",t:"Urosepsis: ED",x:"Cultures, fluids, IV ceftriaxone 2 g (or per ED protocol). Source control."}],["No",null,{k:"a",t:"Complicated UTI: culture first",x:"NAG: IV amoxicillin/clavulanate or ceftriaxone, 5–7 d, oral step-down by culture. Pregnancy: admit."}]]},
+ u2:{q:"Urinary symptoms present?",o:[["Yes",null,{k:"a",t:"Nitrofurantoin 100 mg q12h × 3–5 d",x:"Alt: amoxicillin/clavulanate 625 mg q8h, cephalexin 500 mg q12h, fosfomycin 3 g once. Avoid if GFR <30. No TMP-SMX or amoxicillin alone."}],["No (only positive dipstick/culture)",null,{k:"g",t:"Asymptomatic bacteriuria: do not treat",x:"Exceptions: pregnancy and before urological procedures."}]]}}},
+{id:"sk",t:"Skin & bites",s:"k0",n:{
+ k0:{q:"Pain out of proportion, bullae, crepitus, dusky skin, rapidly spreading, shock?",o:[["Yes",null,{k:"r",t:"Necrotising infection: surgical emergency",x:"ED now. Broad IV antibiotics + urgent debridement."}],["No","k1"]]},
+ k1:{q:"What is it?",o:[["Pus collection",null,{k:"a",t:"Incision and drainage",x:"Antibiotics only for cellulitis, SIRS or immunosuppression (cloxacillin 500 mg q6h)."}],["Cellulitis / erysipelas","k2"],["Bite wound",null,{k:"a",t:"Wash, debride, tetanus ± rabies advice",x:"Amoxicillin/clavulanate 625 mg q8h: 3 d prophylaxis (human, cat, delayed >8 h, deep, crush, immunocompromised) or 5 d if infected. Macaque: add acyclovir."}]]},
+ k2:{q:"Systemic signs (SIRS) or hypotension?",o:[["Yes",null,{k:"r",t:"Admit for IV therapy",x:"Moderate: IV cloxacillin/cefazolin. Severe: pip-tazo, exclude necrotising fasciitis."}],["No",null,{k:"a",t:"Cloxacillin 500 mg q6h × 5–10 d",x:"On an empty stomach. Alt: cephalexin 1 g q12h, amoxicillin 500 mg q8h. Mark margin, review 48 h."}]]}}}
+];
+
+/* ================= DATA: investigations ================= */
+var LB=[
+["Temperature","36.5–37.5°C; fever >38°C","≥38 in infant <3 months, ≥39 with rigors, hypothermia <36","Sepsis screen; ED if toxic"],
+["Heart rate (adult)","60–100/min",">100 with fever: SIRS; >125 SMART-COP point",">130 or hypotension: ED"],
+["Respiratory rate (adult)","12–20/min","≥22 (qSOFA); ≥25–30 pneumonia","≥30: severe CAP, admit"],
+["Systolic BP","100–140 mmHg","≤100 (qSOFA); ≤90 severe pneumonia","<90 or MAP <65: shock, ED"],
+["SpO2 (room air)","≥95%","<94% treat as hypoxic; ≤90% (>50 y) SMART-COP","<92%: admit/O2"],
+["GCS / confusion","15","New confusion: CURB-65 point, qSOFA","Any drop: ED"],
+["CRP","<5 mg/L","5–20 viral range; >50 suggests bacterial; <20 with acute cough argues against pneumonia",">100 mg/L: severe bacterial infection or sepsis"],
+["WBC","4–10 ×10⁹/L (neutrophils 40–70%)",">12 or <4 in febrile patient",">15 with bands, or <4 with fever: sepsis work-up; <4 + low platelets in tropics: dengue"],
+["Platelets","150–400 ×10⁹/L","<150 (dengue/leptospirosis/sepsis)","<100 or falling fast: admit, avoid NSAIDs"],
+["Urine dipstick","Nitrite neg, leucocyte esterase neg","Both positive with symptoms: UTI (nitrite +ve is specific); both negative with symptoms: UTI unlikely","Haematuria + fever + flank pain: upper tract/stone"],
+["UFEME / culture","WBC <5/hpf, no growth ≥10⁵ cfu/mL","Pyuria >10/hpf with symptoms supports UTI","Culture before antibiotics in men, pregnancy, complicated UTI, treatment failure"],
+["Creatinine / eGFR","eGFR >90 mL/min/1.73m²","<60: adjust renal-dosed drugs","<30: no nitrofurantoin or metformin; renal dosing; check NAG Appendix 2"],
+["Urea (CURB-65)","2.5–7.1 mmol/L",">7 = 1 point","Raised with confusion: admit"],
+["Random glucose","<7.8 mmol/L",">11.1 mmol/L: diabetes work-up; infection with DM raises risk","Hyperglycaemic crisis or glucose <3.5: ED"],
+["Chest X-ray","Clear","Infiltrate confirms CAP","Effusion/empyema, cavity (TB/melioidosis): refer"],
+["Rapid strep test / throat swab","Negative","Positive confirms GAS (if available)","—"],
+["Dengue NS1 / IgM","Negative","NS1 positive days 1–5 supports dengue","Warning signs: follow Dengue CPG"],
+["Lactate","<2 mmol/L","2–4: significant",">4: severe sepsis, ED"],
+["qSOFA","0","1: monitor","≥2: sepsis likely, ED (RR ≥22, GCS <15, SBP ≤100)"],
+["Child HR (awake)","<1 y 100–160; 1–5 y 80–140; 6–12 y 70–120","Persistent tachycardia with fever","Lethargy, poor perfusion, CRT >3 s: ED"],
+["Child RR","<1 y 30–50; 1–5 y 20–40; 6–12 y 15–30","Above range + indrawing: pneumonia","Grunting, apnoea, cyanosis, SpO2 <92%: ED"]
+];
+
+/* ================= helpers ================= */
+function tags(a){return a?'<span class="tag '+({yes:"t-r",cond:"t-a",no:"t-g",topical:"t-b",antiviral:"t-b"}[a]||"t-b")+'">'+({yes:"Antibiotic indicated",cond:"Antibiotic only if criteria met",no:"No antibiotic",topical:"Topical therapy",antiviral:"Antiviral"}[a])+'</span>':""}
+function ul(a){return a&&a.length?'<ul class="l">'+a.map(function(x){return"<li>"+esc(x)+"</li>"}).join("")+"</ul>":""}
+function addCase(label,text){CASE.items.push({label:label,text:text});toast("Added to case summary");renderCase()}
+function toast(m){var t=$("toast");if(!t){t=document.createElement("div");t.id="toast";t.style.cssText="position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#e8ebf3;color:#0b0e14;padding:9px 16px;border-radius:99px;font-size:13px;font-weight:700;z-index:99;opacity:0;transition:opacity .2s;pointer-events:none";document.body.appendChild(t)}t.textContent=m;t.style.opacity=1;setTimeout(function(){t.style.opacity=0},1800)}
+
+/* ================= nav ================= */
+var VIEWS=[["home","🏠","Home / triage"],["throat","🗣️","Sore throat score"],["cond","📚","Conditions A–Z"],["flow","🔀","Flowcharts"],["dose","💊","Paeds dose"],["allergy","🛡️","Penicillin allergy"],["labs","🧪","Investigations"],["ai","🤖","AI copilot"],["case","📝","Case summary / PDF"],["refs","📖","References"]];
+$("side").innerHTML='<div class="brand"><div class="logo">💊</div><div><b>AntibioticGuard MY</b><small>NAG 2024 · stewardship</small></div></div>'+VIEWS.map(function(v){return'<button class="nv" data-v="'+v[0]+'"><span>'+v[1]+'</span>'+v[2]+'</button>'}).join("");
+function show(v){document.querySelectorAll(".view").forEach(function(s){s.classList.toggle("hide",s.id!=="v-"+v)});document.querySelectorAll("#side .nv").forEach(function(b){b.classList.toggle("on",b.dataset.v===v)});$("side").classList.remove("open");$("scrim").classList.remove("on");window.scrollTo({top:0})}
+$("side").onclick=function(e){var b=e.target.closest(".nv");if(b)show(b.dataset.v)};
+$("menu").onclick=function(){$("side").classList.add("open");$("scrim").classList.add("on")};$("scrim").onclick=function(){$("side").classList.remove("open");$("scrim").classList.remove("on")};
+function setMode(m){MODE=m;LS.set("abg-mode",m);document.querySelectorAll("#mode button").forEach(function(b){b.classList.toggle("on",b.dataset.m===m);b.classList.toggle("ed",b.dataset.m==="ED"&&m==="ED")});renderHome()}
+$("mode").onclick=function(e){var b=e.target.closest("button");if(b)setMode(b.dataset.m)};
+
+/* ================= online/offline ================= */
+function online(){return navigator.onLine&&!FORCE_OFF}
+function netUI(){var n=$("net"),on=online();n.style.display=on?"none":"block";n.innerHTML="📴 <b>Offline mode.</b> All protocols, calculators and PDF export work on this device. The AI copilot is paused."+(FORCE_OFF?' <button class="btn s" id="goon">Go online</button>':"");$("mic").textContent=on?"📶":"📴";document.querySelectorAll(".needs-net").forEach(function(b){b.disabled=!on});var g=$("goon");if(g)g.onclick=function(){FORCE_OFF=false;LS.set("abg-off",false);netUI()}}
+window.addEventListener("online",netUI);window.addEventListener("offline",netUI);
+$("mic").onclick=function(){FORCE_OFF=!FORCE_OFF;LS.set("abg-off",FORCE_OFF);netUI();toast(FORCE_OFF?"Offline mode on":"Back online")};
+
+/* ================= home ================= */
+var RF=[["Airway: stridor, drooling, tripod, muffled voice","Airway threat: ED/anaesthetic now, keep upright"],["Sepsis: qSOFA ≥2 (RR ≥22, SBP ≤100, GCS <15)","Sepsis: cultures, fluids, IV antibiotics within 1 h"],["Hypoxia: SpO2 <92% or cyanosis","Oxygen and admit"],["Necrotising skin infection signs","Surgical emergency"],["Meningism, petechiae, photophobia","Meningitis/meningococcaemia: IM/IV benzylpenicillin/ceftriaxone then ED"],["Infant <3 months with fever","Admit for sepsis work-up"],["Neutropenia/chemotherapy with fever","ED: febrile neutropenia"],["Pregnancy with fever or UTI symptoms","Obstetric/medical review; treat bacteriuria"]];
+function renderHome(){var ed=MODE==="ED";
+ var h='<div class="card"><h2>'+(ed?"🚑 Emergency triage first":"🏥 Rational prescribing in 3 questions")+'</h2>'+(ed?'<p class="sub">Tick any red flag. A tick means stop the stewardship pathway and treat as an emergency.</p><div id="rf">'+RF.map(function(r,i){return'<label class="chk"><input type="checkbox" data-i="'+i+'">'+esc(r[0])+'</label>'}).join("")+'</div><div id="rfo"></div>':'<ol class="l"><li><b>Is it dangerous?</b> Check red flags (airway, sepsis, hypoxia, neck stiffness).</li><li><b>Is it bacterial?</b> Use the score or criteria (Centor, CURB-65, dipstick).</li><li><b>What is the narrowest effective drug, dose and duration?</b></li></ol>')+'</div>';
+ h+='<div class="card"><h2>Quick tools</h2><div class="row">'+[["throat","🗣️ Sore throat score"],["flow","🔀 Flowcharts"],["dose","💊 Paeds dose"],["allergy","🛡️ Allergy"],["ai","🤖 Ask AI"]].map(function(x){return'<button class="btn" data-go="'+x[0]+'">'+x[1]+'</button>'}).join("")+'</div></div>';
+ h+='<div class="card"><h2>Most common GP presentations</h2>'+C.filter(function(c){return["phar","bron","cys","cell","aom","age","cap","abrs"].indexOf(c.id)>-1}).map(function(c){return'<div class="item" data-c="'+c.id+'"><b>'+esc(c.n)+'</b><div>'+tags(c.abx)+'</div></div>'}).join("")+'</div>';
+ h+='<div class="card"><h2>Do not give antibiotics for</h2><ul class="l"><li>Viral sore throat, colds, acute bronchitis in healthy adults</li><li>Acute watery diarrhoea (use ORS)</li><li>Asymptomatic bacteriuria (except pregnancy / urological procedures)</li><li>Dengue and other viral fevers (check FBC/NS1 first)</li></ul></div>';
+ $("v-home").innerHTML=h}
+document.addEventListener("click",function(e){var g=e.target.closest("[data-go]");if(g){show(g.dataset.go);return}var c=e.target.closest("[data-c]");if(c){openCond(c.dataset.c)}});
+document.addEventListener("change",function(e){if(e.target.closest("#rf")){var bad=[].slice.call(document.querySelectorAll("#rf input:checked")).map(function(x){return RF[x.dataset.i][1]});$("rfo").innerHTML=bad.length?bad.map(function(b){return'<div class="box r"><b>STOP. Emergency pathway</b>'+esc(b)+'</div>'}).join("")+'<button class="btn" id="rfadd">Add to case</button>':'';var a=$("rfadd");if(a)a.onclick=function(){addCase("Red flags",bad.join("; "))}}});
+
+/* ================= conditions ================= */
+function condCard(c){var h='<div class="card"><h2>'+esc(c.n)+'</h2><div>'+tags(c.abx)+'<span class="tag t-p">'+c.o+'</span></div>';
+ if(c.dx.length)h+='<h3>Diagnostic criteria</h3>'+ul(c.dx);
+ if(c.red.length)h+='<div class="box r"><b>Red flags: refer or escalate</b>'+ul(c.red)+'</div>';
+ if(c.a.length)h+='<h3>Adult treatment</h3>'+ul(c.a);
+ if(c.p.length)h+='<h3>Children</h3>'+ul(c.p);
+ h+='<div class="box p"><b>Stewardship pearl</b>'+esc(c.pearl)+'</div><p class="sub">Source: '+esc(c.ref)+'</p><div class="row no-print"><button class="btn s" data-add="'+c.id+'">+ Add to case</button><button class="btn s" data-ask="'+c.id+'">🤖 Ask AI about this</button></div></div>';return h}
+function renderCond(f,org){var q=(f||"").toLowerCase(),list=C.filter(function(c){return(!org||c.o===org)&&(!q||(c.n+" "+c.k+" "+c.a.join(" ")+" "+c.p.join(" ")+" "+c.o).toLowerCase().indexOf(q)>-1)});
+ $("v-cond").innerHTML='<div class="card"><h2>Conditions A–Z</h2><div class="row" style="margin-bottom:8px"><button class="pill" data-org="">All</button>'+ORG.map(function(o){return'<button class="pill" data-org="'+o+'">'+o+'</button>'}).join("")+'</div><input class="in" id="cq" placeholder="Filter list" value="'+esc(f||"")+'"></div><div id="clist">'+(list.length?list.map(function(c){return'<div class="item" data-open="'+c.id+'"><b>'+esc(c.n)+'</b><div>'+tags(c.abx)+'</div><div class="sub">'+c.o+'</div></div>'}).join(""):'<p class="sub">No match.</p>')+'</div>'}
+function openCond(id){var c=C.filter(function(x){return x.id===id})[0];if(!c)return;show("cond");$("v-cond").innerHTML='<button class="btn s no-print" data-back="1" style="margin-bottom:10px">← All conditions</button>'+condCard(c)}
+document.addEventListener("click",function(e){var o=e.target.closest("[data-open]");if(o){openCond(o.dataset.open);return}if(e.target.closest("[data-back]")){renderCond();return}var og=e.target.closest("[data-org]");if(og){renderCond("",og.dataset.org);return}var ad=e.target.closest("[data-add]");if(ad){var c=C.filter(function(x){return x.id===ad.dataset.add})[0];addCase(c.n,(c.abx==="no"?"No antibiotic. ":"")+c.a.slice(0,3).join(" | "));return}var ak=e.target.closest("[data-ask]");if(ak){var c2=C.filter(function(x){return x.id===ak.dataset.ask})[0];show("ai");$("aiq").value="Give a quick practical plan for "+c2.n+" in my setting, including what to tell the patient.";}});
+document.addEventListener("input",function(e){if(e.target.id==="cq"){var v=e.target.value;renderCond(v);$("cq").focus();$("cq").setSelectionRange(v.length,v.length)}});
+
+/* global search */
+$("q").addEventListener("input",function(){var v=this.value.trim().toLowerCase();if(v.length<2){return}
+ var hits=C.filter(function(c){return(c.n+" "+c.k+" "+c.a.join(" ")+" "+c.p.join(" ")).toLowerCase().indexOf(v)>-1});
+ show("cond");$("v-cond").innerHTML='<div class="card"><h2>Search: “'+esc(v)+'”</h2>'+(hits.length?hits.map(function(c){return'<div class="item" data-open="'+c.id+'"><b>'+esc(c.n)+'</b><div>'+tags(c.abx)+'</div><div class="sub">'+c.o+'</div></div>'}).join(""):'<p class="sub">No match. Try the AI copilot for free-text questions.</p><button class="btn" data-go="ai">🤖 Ask AI</button>')+'</div>'});
+
+/* ================= sore throat score ================= */
+function renderThroat(){$("v-throat").innerHTML='<div class="card"><h2>Modified Centor (McIsaac) score</h2><p class="sub">NAG: score &lt;3 needs no antibiotic; ≥3 needs treatment. Tick what applies.</p>'+
+ [["tx","Tonsillar swelling or exudate"],["nd","Tender anterior cervical nodes"],["fv","Fever above 38°C"],["nc","NO cough"]].map(function(x){return'<label class="chk"><input type="checkbox" id="th-'+x[0]+'">'+x[1]+'</label>'}).join("")+
+ '<label class="f">Age</label><select class="in" id="th-age"><option value="1">3–14 years (+1)</option><option value="0" selected>15–44 years (0)</option><option value="-1">45 years or older (−1)</option><option value="x">Under 3 years</option></select></div><div id="th-out"></div>'}
+function calcThroat(){var s=0;["tx","nd","fv","nc"].forEach(function(k){if($("th-"+k).checked)s++});var a=$("th-age").value;if(a!=="x")s+=parseInt(a);
+ var P=[[-1,"1–2.5%"],[0,"1–2.5%"],[1,"5–10%"],[2,"11–17%"],[3,"28–35%"],[4,"51–53%"]],pr=P[Math.max(0,Math.min(5,s+1))][1],abx=s>=3,o="";
+ if(a==="x")o='<div class="box a"><b>Under 3 years</b>Score not validated. GAS is uncommon; treat as viral unless clearly unwell; consider diphtheria/epiglottitis red flags.</div>';
+ else o='<div class="card"><div class="score" style="color:var(--'+(abx?"amb":"grn")+')">'+s+'</div><p>Estimated chance of group A strep: <b>'+pr+'</b></p>'+
+ (abx?'<div class="box a"><b>NAG: antibiotic indicated (score ≥3)</b>Phenoxymethylpenicillin 500 mg q6h or 1 g q12h for 5–10 days (10 d if rheumatic-fever risk), or benzathine penicillin 1.2 MU IM once. Alternative amoxicillin 500 mg q8h. Penicillin allergy: erythromycin ethylsuccinate 800 mg q12h. Children: penicillin V 25–50 mg/kg/day QID or amoxicillin 50 mg/kg/day OD/BD for 10 days.</div><p class="sub">If a rapid strep test or throat culture is available, use it to confirm; some guidelines treat only at score 4 or test-positive.</p>':'<div class="box g"><b>No antibiotic</b>Likely viral. Offer paracetamol/ibuprofen, fluids, lozenges. Return if trismus, drooling, voice change, unable to swallow, or not improving in 5–7 days.</div>')+
+ '<div class="box r"><b>Never miss</b>Quinsy, epiglottitis, diphtheria (grey membrane, bull neck), Lemierre. Immunosuppressed or rheumatic heart disease: lower threshold.</div><button class="btn" id="th-add">+ Add to case</button></div>';
+ $("th-out").innerHTML=o;var b=$("th-add");if(b)b.onclick=function(){addCase("Modified Centor "+s,(abx?"Antibiotic indicated per NAG (score ≥3).":"No antibiotic (score <3). ")+"Strep probability "+pr)}}
+document.addEventListener("change",function(e){if(e.target.closest("#v-throat"))calcThroat()});
+
+/* ================= flowcharts ================= */
+var FS={id:"th",path:[]};
+function renderFlow(){var f=FL.filter(function(x){return x.id===FS.id})[0],cur=FS.cur||f.s,node=f.n[cur];
+ var h='<div class="card"><h2>Decision flowcharts</h2><div class="row">'+FL.map(function(x){return'<button class="pill" data-fl="'+x.id+'" style="'+(x.id===FS.id?"border-color:var(--pri);color:var(--pri)":"")+'">'+x.t+'</button>'}).join("")+'</div></div>';
+ h+='<div class="card">'+FS.path.map(function(p){return'<div class="sub">↳ '+esc(p[0])+' <b>→ '+esc(p[1])+'</b></div>'}).join("");
+ if(FS.out){var o=FS.out;h+='<div class="box '+o.k+'"><b>'+esc(o.t)+'</b>'+esc(o.x)+'</div><div class="row"><button class="btn" data-flr="1">↺ Restart</button><button class="btn p" id="fl-add">+ Add to case</button></div>'}
+ else{h+='<h3>'+esc(node.q)+'</h3>'+(node.h?'<p class="sub">'+esc(node.h)+'</p>':"")+node.o.map(function(o,i){return'<button class="opt" data-fo="'+i+'">'+esc(o[0])+'</button>'}).join("")+(FS.path.length?'<button class="btn s" data-flr="1">↺ Restart</button>':"")}
+ $("v-flow").innerHTML=h+'</div>';var a=$("fl-add");if(a)a.onclick=function(){addCase("Flowchart: "+f.t,FS.out.t+". "+FS.out.x)}}
+document.addEventListener("click",function(e){var t=e.target;var fl=t.closest("[data-fl]");if(fl){FS={id:fl.dataset.fl,path:[]};renderFlow();return}if(t.closest("[data-flr]")){FS={id:FS.id,path:[]};renderFlow();return}
+ var fo=t.closest("[data-fo]");if(fo){var f=FL.filter(function(x){return x.id===FS.id})[0],node=f.n[FS.cur||f.s],o=node.o[fo.dataset.fo];FS.path.push([node.q,o[0]]);if(o[2]){FS.out=o[2]}else FS.cur=o[1];renderFlow()}});
+var _rf=renderFlow;renderFlow=function(){_rf()};
+
+/* ================= paeds dose ================= */
+/* mg/kg per dose; conc = mg per 5 mL; revised against NAG paediatric sections where available */
+var D=[
+{g:"Antibiotics",n:"Amoxicillin",c:[125,250],dc:250,r:[
+ {l:"High dose (AOM, sinusitis, CAP): 80–90 mg/kg/day BD",mk:40,f:2,mx:1000,md:3000,d:"5 d (AOM <2 y 7–10 d)"},
+ {l:"Pharyngitis: 50 mg/kg once daily",mk:50,f:1,mx:1000,md:1000,d:"10 d"},
+ {l:"Standard 15 mg/kg TDS (if high dose not tolerated)",mk:15,f:3,mx:500,md:1500,d:"5–7 d"}],n2:"NAG B9/B10. Max 1 g per dose."},
+{g:"Antibiotics",n:"Amoxicillin/clavulanate 7:1 (228 mg/5 mL, 200 mg amoxicillin)",c:[200],dc:200,r:[{l:"40–50 mg/kg/day amoxicillin BD",mk:22,f:2,mx:1500,md:3000,d:"5–7 d"}],n2:"Dose by amoxicillin component (NAG: max 3 g/day). With meals."},
+{g:"Antibiotics",n:"Amoxicillin/clavulanate 4:1 (312.5 mg/5 mL, 250 mg amoxicillin)",c:[250],dc:250,r:[{l:"40–50 mg/kg/day amoxicillin BD",mk:22,f:2,mx:1500,md:3000,d:"5–7 d"}],n2:"Dose by amoxicillin component."},
+{g:"Antibiotics",n:"Amoxicillin/clavulanate 7:1 (457 mg/5 mL, 400 mg amoxicillin)",c:[400],dc:400,r:[{l:"40–50 mg/kg/day amoxicillin BD",mk:22,f:2,mx:1500,md:3000,d:"5–7 d"}],n2:"Dose by amoxicillin component."},
+{g:"Antibiotics",n:"Amoxicillin/clavulanate ES 14:1 (600 mg/5 mL amoxicillin)",c:[600],dc:600,r:[{l:"AOM failure: 80–90 mg/kg/day BD",mk:42,f:2,mx:1500,md:3000,d:"5–10 d"}],n2:"Less diarrhoea. NAG B9 §3."},
+{g:"Antibiotics",n:"Penicillin V",c:[125,250],dc:250,r:[{l:"Pharyngitis 10 mg/kg QID (40 mg/kg/day)",mk:10,f:4,mx:500,md:2000,d:"10 d"}],n2:"NAG 25–50 mg/kg/day in 4 doses, max 2 g/day. Empty stomach."},
+{g:"Antibiotics",n:"Cephalexin",c:[125,250],dc:250,r:[{l:"Non-severe penicillin allergy (pharyngitis): 20 mg/kg BD",mk:20,f:2,mx:1000,md:2000,d:"10 d"},{l:"Usual practice: 15 mg/kg QID (not in NAG)",mk:15,f:4,mx:500,md:2000,d:"5–7 d"}],n2:"Shares side chain with ampicillin (avoid in true ampicillin IgE allergy)."},
+{g:"Antibiotics",n:"Cefuroxime",c:[125],dc:125,r:[{l:"30 mg/kg/day BD (NAG)",mk:15,f:2,mx:500,md:1000,d:"5 d (AOM)"}],n2:"NAG: max 1 g/day. Changed from 10 mg/kg BD in the source tool."},
+{g:"Antibiotics",n:"Cefaclor",c:[125,250],dc:250,r:[{l:"13 mg/kg TDS (about 40 mg/kg/day)",mk:13,f:3,mx:500,md:1000,d:"5–7 d"}],n2:"Not in NAG. Source tool used 15 mg/kg TDS (45/day), above the usual 40 mg/kg/day ceiling."},
+{g:"Antibiotics",n:"Cloxacillin",c:[125,250],dc:250,r:[{l:"15 mg/kg QID",mk:15,f:4,mx:500,md:2000,d:"5–7 d"}],n2:"Give 1 h before or 2 h after food. Verify with local protocol."},
+{g:"Antibiotics",n:"Erythromycin ethylsuccinate",c:[200],dc:200,r:[{l:"40–50 mg/kg/day BD (NAG)",mk:20,f:2,mx:800,md:1600,d:"5–10 d"}],n2:"Severe penicillin allergy. GI upset; interacts with many drugs."},
+{g:"Antibiotics",n:"Azithromycin",c:[200],dc:200,r:[{l:"10 mg/kg ONCE daily × 3 days",mk:10,f:1,mx:500,md:500,d:"3 d"},{l:"NAG AOM allergy: 10 mg/kg day 1 then 5 mg/kg days 2–5",mk:10,f:1,mx:500,md:500,d:"day 1 (then half dose)"}],n2:"Once daily. The source tool said BD, which is wrong."},
+{g:"Symptomatic",n:"Paracetamol",c:[120,250],dc:120,r:[{l:"15 mg/kg every 4–6 h",mk:15,f:4,mx:1000,md:4000,d:"as needed (max 4 doses/day)"}],n2:"Max 60 mg/kg/day. Safe in suspected dengue."},
+{g:"Symptomatic",n:"Ibuprofen",c:[100],dc:100,r:[{l:"5 mg/kg TDS–QID",mk:5,f:3,mx:400,md:1200,d:"as needed"}],a:6,n2:"Avoid <6 months, dehydration, asthma flares, renal disease and ANY suspected dengue. Give with food."},
+{g:"Symptomatic",n:"Cetirizine",c:[5],dc:5,r:[{l:"0.25 mg/kg once daily",mk:0.25,f:1,mx:10,md:10,d:"as needed"}],a:24,n2:"Age ≥2 y."},
+{g:"Symptomatic",n:"Desloratadine",c:[2.5],dc:2.5,r:[{l:"0.1 mg/kg once daily",mk:0.1,f:1,mx:5,md:5,d:"as needed"}],a:12,n2:"Age ≥1 y."},
+{g:"Symptomatic",n:"Chlorpheniramine (Piriton)",c:[2],dc:2,r:[{l:"0.1 mg/kg TDS",mk:0.1,f:3,mx:4,md:12,d:"as needed"}],a:24,n2:"Age ≥2 y. Drowsy."},
+{g:"Symptomatic",n:"Prednisolone",c:[5],dc:5,r:[{l:"Acute asthma: 1 mg/kg once daily",mk:1,f:1,mx:40,md:40,d:"3–5 d"}],a:12,n2:"The source tool listed 0.15 mg/kg TDS, which is a much lower dose; confirm with the asthma protocol."},
+{g:"Symptomatic",n:"Domperidone",c:[5],dc:5,r:[{l:"0.25 mg/kg TDS",mk:0.25,f:3,mx:10,md:30,d:"≤7 d"}],a:12,n2:"Short course only; QT risk. Not for routine gastroenteritis (use ORS)."},
+{g:"Symptomatic",n:"Promethazine",c:[5],dc:5,r:[{l:"0.2 mg/kg TDS",mk:0.2,f:3,mx:25,md:75,d:"as needed"}],a:24,n2:"Contraindicated <2 y (respiratory depression). Sedating."},
+{g:"Symptomatic",n:"Bromhexine",c:[4],dc:4,r:[{l:"0.3 mg/kg TDS",mk:0.3,f:3,mx:8,md:24,d:"≤5 d"}],a:24,n2:"Age ≥2 y. Evidence for benefit is weak; cough medicines are not advised in young children."}
+];
+var DS={w:15,ageY:4,di:0,ri:0,ci:1};
+function renderDose(){var d=D[DS.di],r=d.r[Math.min(DS.ri,d.r.length-1)];
+ $("v-dose").innerHTML='<div class="card"><h2>Paediatric dose calculator</h2><p class="sub">Weight-based liquid doses, with NAG paediatric regimens and maximum-dose caps. Always check the product label.</p><div class="fg"><div><label class="f">Weight (kg)</label><input class="in" id="dw" type="number" inputmode="decimal" step="0.1" value="'+DS.w+'"></div><div><label class="f">Age (years)</label><input class="in" id="da" type="number" inputmode="decimal" step="0.1" value="'+DS.ageY+'"></div></div>'+
+ '<label class="f" style="margin-top:8px">Drug</label><select class="in" id="dd">'+["Antibiotics","Symptomatic"].map(function(g){return'<optgroup label="'+g+'">'+D.map(function(x,i){return x.g===g?'<option value="'+i+'"'+(i==DS.di?" selected":"")+'>'+esc(x.n)+'</option>':""}).join("")+'</optgroup>'}).join("")+'</select>'+
+ '<label class="f" style="margin-top:8px">Regimen</label><select class="in" id="dr">'+d.r.map(function(x,i){return'<option value="'+i+'"'+(i==DS.ri?" selected":"")+'>'+esc(x.l)+'</option>'}).join("")+'</select>'+
+ '<label class="f" style="margin-top:8px">Bottle strength (mg per 5 mL)</label><select class="in" id="dc">'+d.c.map(function(x,i){return'<option value="'+i+'"'+(i==DS.ci?" selected":"")+'>'+x+' mg/5 mL</option>'}).join("")+'</select></div><div id="dout"></div>'}
+function calcDose(){var d=D[DS.di],r=d.r[Math.min(DS.ri,d.r.length-1)],conc=d.c[Math.min(DS.ci,d.c.length-1)],w=DS.w,o="";
+ if(!(w>0)){$("dout").innerHTML='<div class="box a">Enter a valid weight.</div>';return}
+ var ageM=DS.ageY*12;if(w>40)o+='<div class="box a"><b>Weight over 40 kg</b>Use the adult dose.</div>';if(w<3)o+='<div class="box r"><b>Weight under 3 kg</b>Neonate: use neonatal guidance and refer.</div>';
+ if(d.a&&ageM<d.a)o+='<div class="box r"><b>Not recommended at this age</b>'+esc(d.n)+' is for age ≥'+(d.a>=12?(d.a/12)+" y":d.a+" months")+'.</div>';
+ else{var mg=w*r.mk,capped=false;if(mg>r.mx){mg=r.mx;capped=true}if(mg*r.f>r.md){mg=r.md/r.f;capped=true}
+  var ml=mg/(conc/5),day=mg*r.f;
+  o+='<div class="card" style="border-color:var(--pri)"><div class="sub">'+esc(d.n)+'</div><div class="score" style="color:var(--pri)">'+ml.toFixed(1)+' mL</div><p><b>'+Math.round(mg*10)/10+' mg</b> per dose · '+r.f+' time'+(r.f>1?"s":"")+' daily · total '+Math.round(day)+' mg/day ('+(day/w).toFixed(0)+' mg/kg/day)</p><p class="sub">Duration: '+esc(r.d)+'. Rounded to 0.1 mL; use an oral syringe.</p>'+(capped?'<div class="box a"><b>Maximum dose applied</b>The calculated dose was above the per-dose or daily ceiling.</div>':"")+'<div class="box b"><b>Note</b>'+esc(d.n2)+'</div><button class="btn" id="d-add">+ Add to case</button></div>';
+  window._dl=d.n+": "+ml.toFixed(1)+" mL ("+Math.round(mg*10)/10+" mg) x"+r.f+"/day, "+r.d+" for "+w+" kg, "+DS.ageY+" y";}
+ $("dout").innerHTML=o;var b=$("d-add");if(b)b.onclick=function(){addCase("Paeds dose",window._dl)}}
+document.addEventListener("change",function(e){var t=e.target;if(!t.closest("#v-dose"))return;if(t.id==="dd"){DS.di=+t.value;DS.ri=0;DS.ci=D[DS.di].c.indexOf(D[DS.di].dc);renderDose()}else if(t.id==="dr"){DS.ri=+t.value}else if(t.id==="dc"){DS.ci=+t.value}calcDose()});
+document.addEventListener("input",function(e){var t=e.target;if(t.id==="dw"){DS.w=parseFloat(t.value);calcDose()}if(t.id==="da"){DS.ageY=parseFloat(t.value)||0;calcDose()}});
+
+/* ================= allergy ================= */
+function renderAllergy(){$("v-allergy").innerHTML='<div class="card"><h2>Penicillin allergy: PEN-FAST + alternatives</h2><p class="sub">NAG Appendix 3. Up to 90% of reported penicillin allergy is not true allergy. PEN-FAST is validated for age >12.</p>'+
+ '<label class="chk"><input type="checkbox" id="pf1">Reaction was ≤5 years ago (or unknown) <b>+2</b></label><label class="chk"><input type="checkbox" id="pf2">Anaphylaxis / angioedema, or severe skin reaction (SJS/TEN/DRESS/AGEP) <b>+2</b></label><label class="chk"><input type="checkbox" id="pf3">Treatment was required for the reaction (or unknown) <b>+1</b></label>'+
+ '<label class="f">What did the reaction look like?</label><select class="in" id="pfx"><option value="gi">Nausea, vomiting, diarrhoea (intolerance)</option><option value="mild">Mild or delayed rash (&gt;2 h after dose)</option><option value="ige">Hives, swelling, wheeze, hypotension within 2 h (Type I)</option><option value="scar">Blistering, mucosal ulcers, skin peeling, organ involvement (SCAR)</option></select>'+
+ '<label class="f" style="margin-top:8px">Indication</label><select class="in" id="pfi"><option value="phar">Sore throat (GAS)</option><option value="abrs">Sinusitis</option><option value="cap">Pneumonia (outpatient)</option><option value="skin">Cellulitis / impetigo</option><option value="bite">Bite</option><option value="uti">Cystitis</option></select></div><div id="pfo"></div>'}
+function calcAllergy(){var s=($("pf1").checked?2:0)+($("pf2").checked?2:0)+($("pf3").checked?1:0),x=$("pfx").value,i=$("pfi").value,band=s===0?["Very low (<1%)","g"]:s<3?["Low (about 5%)","g"]:s===3?["Moderate (about 20%)","a"]:["High (≥50%)","r"],o='<div class="card"><div class="score">'+s+'</div><p>PEN-FAST risk: <b>'+band[0]+'</b></p>';
+ if(x==="scar")o+='<div class="box r"><b>Severe delayed reaction (SCAR)</b>Do NOT rechallenge with the culprit; avoid all β-lactams unless an allergist clears. Document in the allergy card. Use a non-β-lactam.</div>';
+ else if(x==="ige")o+='<div class="box r"><b>Possible IgE (Type I) reaction</b>Avoid penicillins until assessed. Cephalosporins with dissimilar side chains (cefuroxime, ceftriaxone) are usually safe even after penicillin allergy (cross-reactivity very low); avoid cephalexin/cefaclor if ampicillin was the culprit, and cefadroxil/cefprozil if amoxicillin. Refer for allergy testing (PEN-FAST ≥3 → refer).</div>';
+ else o+='<div class="box '+(s<3?"g":"a")+'"><b>'+(s<3?"Low risk: direct oral challenge":"Needs allergy review")+'</b>'+(s<3?"NAG: test-dose challenge in clinic with resuscitation drugs available: give ¼ of the oral dose, observe 20 min; if no reaction give the rest, observe 2 h. If tolerated, delabel and document.":"PEN-FAST ≥3: refer for formal testing; use an alternative meanwhile.")+(x==="gi"?" GI upset is intolerance, not allergy.":"")+'</div>';
+ var A={phar:"Erythromycin ethylsuccinate 800 mg q12h (NAG). Non-severe allergy may use a cephalosporin per local advice.",abrs:"Doxycycline 100 mg q12h × 5 d. Pregnancy: azithromycin 500 mg daily × 3 d.",cap:"Doxycycline 100 mg q12h × 5–7 d; with comorbidity and allergy: levofloxacin 750 mg daily × 5 d (reserve).",skin:"Impetigo: erythromycin ES 800 mg q12h. Cellulitis: clindamycin (600 mg IV q6h; oral 300 mg q6h), or cefuroxime if non-severe allergy.",bite:"Doxycycline 200 mg D1 then 100–200 mg daily; or cefuroxime 500 mg q12h + metronidazole 400 mg q8h.",uti:"Nitrofurantoin or fosfomycin (no β-lactam needed)."};
+ o+='<div class="box p"><b>Suggested alternative</b>'+A[i]+'</div><div class="box b"><b>Cross-reactivity rule</b>It depends on the R1 side chain, not the β-lactam ring. Amoxicillin ≈ cefadroxil/cefprozil; ampicillin ≈ cephalexin/cefaclor. Cefuroxime, ceftriaxone, cefazolin have dissimilar side chains.</div><button class="btn" id="a-add">+ Add to case</button></div>';
+ $("pfo").innerHTML=o;$("a-add").onclick=function(){addCase("Penicillin allergy","PEN-FAST "+s+" ("+band[0]+"); reaction: "+x+"; indication: "+i)}}
+document.addEventListener("change",function(e){if(e.target.closest("#v-allergy"))calcAllergy()});
+
+/* ================= labs ================= */
+function renderLabs(q){q=(q||"").toLowerCase();$("v-labs").innerHTML='<div class="card"><h2>Investigations: ranges, red flags, action</h2><input class="in" id="lq" placeholder="Search test or vital sign" value="'+esc(q)+'"></div><div class="card tw"><table><thead><tr><th>Test</th><th>Normal</th><th>Act when</th><th>Red flag / refer</th></tr></thead><tbody>'+LB.filter(function(l){return l.join(" ").toLowerCase().indexOf(q)>-1}).map(function(l){return'<tr><td><b>'+esc(l[0])+'</b></td><td>'+esc(l[1])+'</td><td>'+esc(l[2])+'</td><td style="color:var(--red)">'+esc(l[3])+'</td></tr>'}).join("")+'</tbody></table></div>'}
+document.addEventListener("input",function(e){if(e.target.id==="lq"){var v=e.target.value;renderLabs(v);var el=$("lq");el.focus();el.setSelectionRange(v.length,v.length)}});
+
+/* ================= case summary / PDF ================= */
+var CF=LS.get("abg-case",{});
+function renderCase(){var f=function(k,l,t,ph){return'<div><label class="f">'+l+'</label><input class="in cf" data-k="'+k+'" type="'+(t||"text")+'" value="'+esc(CF[k]||"")+'" placeholder="'+(ph||"")+'"></div>'};
+ $("v-case").innerHTML='<div class="card"><h2>Case summary for the patient record</h2><p class="sub">Entered text stays on this device. Save as PDF or copy as text for your EMR. Avoid unnecessary identifiers.</p><div class="fg">'+f("pid","Patient name / MRN")+f("age","Age (y)","number")+f("wt","Weight (kg)","number")+f("sex","Sex")+f("al","Allergy")+f("preg","Pregnant? / eGFR")+'</div>'+
+ [["pres","Presentation and key findings"],["dx","Diagnosis"],["rx","Antibiotic decision and regimen"],["sn","Safety-net advice given"],["fu","Follow-up plan"]].map(function(x){return'<label class="f" style="margin-top:8px">'+x[1]+'</label><textarea class="in cf" data-k="'+x[0]+'">'+esc(CF[x[0]]||"")+'</textarea>'}).join("")+
+ '<h3>Added from tools</h3>'+(CASE.items.length?CASE.items.map(function(it,i){return'<div class="box p"><b>'+esc(it.label)+'</b>'+esc(it.text)+'<div><button class="btn s" data-rm="'+i+'">Remove</button></div></div>'}).join(""):'<p class="sub">Nothing yet. Use “Add to case” on any tool.</p>')+
+ '<div class="row no-print" style="margin-top:12px"><button class="btn p" id="c-pdf">⬇ Save PDF</button><button class="btn" id="c-copy">📋 Copy for EMR</button><button class="btn" id="c-save">💾 Save on device</button><button class="btn" id="c-clr">Clear</button></div></div><div id="c-saved"></div>';
+ var s=LS.get("abg-saved",[]);$("c-saved").innerHTML=s.length?'<div class="card"><h2>Saved cases on this device</h2>'+s.map(function(c,i){return'<div class="item" data-ld="'+i+'"><b>'+esc(c.pid||"No ID")+'</b><div class="sub">'+esc(c.when)+' · '+esc(c.dx||"")+'</div></div>'}).join("")+'</div>':""}
+function caseText(){var L=["ANTIBIOTIC STEWARDSHIP CASE SUMMARY","Date: "+new Date().toLocaleString("en-GB")+"   Setting: "+(MODE==="ED"?"Emergency":"GP clinic"),"Patient: "+(CF.pid||"-")+"   Age: "+(CF.age||"-")+"   Weight: "+(CF.wt||"-")+" kg   Sex: "+(CF.sex||"-"),"Allergy: "+(CF.al||"none stated")+"   Pregnancy/renal: "+(CF.preg||"-"),"","Presentation: "+(CF.pres||"-"),"Diagnosis: "+(CF.dx||"-"),"Antibiotic decision: "+(CF.rx||"-"),"Safety-net: "+(CF.sn||"-"),"Follow-up: "+(CF.fu||"-")];if(CASE.items.length){L.push("","Tool results:");CASE.items.forEach(function(i){L.push("- "+i.label+": "+i.text)})}L.push("","Decision support based on MOH National Antimicrobial Guideline. Clinician judgement applies.");return L.join("\n")}
+document.addEventListener("input",function(e){if(e.target.classList.contains("cf")){CF[e.target.dataset.k]=e.target.value;LS.set("abg-case",CF)}});
+document.addEventListener("click",function(e){var t=e.target;if(t.id==="c-pdf")makePdf();else if(t.id==="c-copy"){var tx=caseText();if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(tx).then(function(){toast("Copied")},function(){toast("Copy failed")});else toast("Copy not available")}
+ else if(t.id==="c-save"){var s=LS.get("abg-saved",[]);s.unshift({pid:CF.pid,dx:CF.dx,when:new Date().toLocaleString("en-GB"),f:CF,items:CASE.items});LS.set("abg-saved",s.slice(0,30));toast("Saved on this device");renderCase()}
+ else if(t.id==="c-clr"){CF={};CASE.items=[];LS.set("abg-case",{});renderCase()}
+ var rm=t.closest("[data-rm]");if(rm){CASE.items.splice(+rm.dataset.rm,1);renderCase()}
+ var ld=t.closest("[data-ld]");if(ld){var c=LS.get("abg-saved",[])[ld.dataset.ld];if(c){CF=c.f;CASE.items=c.items||[];LS.set("abg-case",CF);renderCase()}}});
+
+/* minimal PDF writer (no external library, works offline) */
+var clean=function(t){return String(t).replace(/[–—]/g,"-").replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/≥/g,">=").replace(/≤/g,"<=").replace(/→/g,"->").replace(/×/g,"x").replace(/[⁹]/g,"^9").replace(/[•·]/g,"-").replace(/[^\x20-\x7E\n]/g,"")};
+function pdfBlob(text){var W=595,H=842,M=48,lines=[];clean(text).split("\n").forEach(function(p){var b=/^[A-Z][A-Z ]{8,}$/.test(p.trim()),max=b?60:92;if(!p){lines.push(["",10,0]);return}var w=p.split(" "),cur="";w.forEach(function(x){if((cur+" "+x).length>max){lines.push([cur,b?14:10,b?1:0]);cur=x}else cur=cur?cur+" "+x:x});lines.push([cur,b?14:10,b?1:0])});
+ var pages=[],cur=[],y=H-M;lines.forEach(function(l){y-=l[1]+4;if(y<M){pages.push(cur);cur=[];y=H-M-l[1]-4}cur.push([l,y])});pages.push(cur);
+ var objs=[],add=function(s){objs.push(s);return objs.length};add("<< /Type /Catalog /Pages 2 0 R >>");add("PLACEHOLDER");add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>");add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>");
+ var kids=[];pages.forEach(function(pg){var s="BT\n";pg.forEach(function(it){var l=it[0],t=l[0].replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)");s+="/F"+(l[2]?2:1)+" "+l[1]+" Tf 1 0 0 1 "+M+" "+it[1].toFixed(1)+" Tm ("+t+") Tj\n"});s+="ET";var c=add("<< /Length "+s.length+" >>\nstream\n"+s+"\nendstream"),p=add("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "+W+" "+H+"] /Contents "+c+" 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>");kids.push(p+" 0 R")});
+ objs[1]="<< /Type /Pages /Kids ["+kids.join(" ")+"] /Count "+kids.length+" >>";
+ var out="%PDF-1.4\n",off=[];objs.forEach(function(o,i){off.push(out.length);out+=(i+1)+" 0 obj\n"+o+"\nendobj\n"});var x=out.length;out+="xref\n0 "+(objs.length+1)+"\n0000000000 65535 f \n"+off.map(function(o){return("0000000000"+o).slice(-10)+" 00000 n \n"}).join("")+"trailer\n<< /Size "+(objs.length+1)+" /Root 1 0 R >>\nstartxref\n"+x+"\n%%EOF";
+ return new Blob([out],{type:"application/pdf"})}
+async function download(blob,name){try{var dl=window.claude?await window.claude.use("downloads"):null;if(dl){await dl.save({filename:name,data:blob});return}}catch(e){if(e&&e.code==="declined")return}var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove()}
+function makePdf(){download(pdfBlob(caseText()),"case-summary-"+new Date().toISOString().slice(0,10)+".pdf")}
+window._pdfBlob=pdfBlob;
+
+/* ================= AI copilot ================= */
+var KB=(function(){return"MALAYSIAN NAG (MOH, 2024, updated Jan 2026) FACTS you must follow. If a point is not covered, say it is outside these sources.\n"+C.map(function(c){return"- "+c.n+" ["+(c.abx==="no"?"NO antibiotic":c.abx==="cond"?"antibiotic only if criteria met":"antibiotic indicated")+"]: "+c.a.concat(c.p).join(" | ")}).join("\n")+"\nRULES: Modified Centor <3 no antibiotic, >=3 treat. CURB-65 0-1 outpatient, 2 consider admission, >=3 admit. TMP-SMX and amoxicillin alone are not empirical for UTI (resistance). Penicillin allergy: use PEN-FAST (<3 low risk, direct oral challenge; >=3 refer); cephalosporin cross-reactivity depends on side chain. Do not give NSAIDs when dengue is possible. Always check red flags, allergy, pregnancy, renal function and weight before dosing. Use mmol/L and Malaysian drug names/formulary."})();
+function ctx(){var s="SETTING: "+(MODE==="ED"?"Emergency department":"GP/primary care clinic, Malaysia")+"\n";if(CF.age)s+="Age "+CF.age+"; ";if(CF.wt)s+="weight "+CF.wt+" kg; ";if(CF.sex)s+="sex "+CF.sex+"; ";if(CF.al)s+="allergy: "+CF.al+"; ";if(CF.preg)s+="pregnancy/renal: "+CF.preg;return s}
+var HIST=[],busy=false;
+function renderAI(){$("v-ai").innerHTML='<div class="card"><h2>🤖 AI stewardship copilot</h2><p class="sub">Claude answers from the NAG facts built into this page and your case details. Review every suggestion. It runs on your own Claude account and needs internet.</p>'+
+ '<div class="row" style="margin:6px 0 10px"><button class="pill needs-net" data-pq="Sore throat, 24-year-old, fever, exudate, no cough, tender nodes. What do I do?">Sore throat</button><button class="pill needs-net" data-pq="Child 3 years, 14 kg, red bulging eardrum, fever. Dose and plan?">Child AOM</button><button class="pill needs-net" data-pq="Woman 30, dysuria 2 days, nitrite positive, allergic to penicillin (rash). Which drug?">UTI + allergy</button><button class="pill needs-net" data-pq="Diabetic man 60, red swollen leg, T 38.4, HR 102. Admit or oral?">Cellulitis</button></div>'+
+ '<div id="chat"></div><textarea class="in" id="aiq" placeholder="Describe the patient or ask a question…"></textarea><div class="row" style="margin-top:8px"><button class="btn p needs-net" id="ai-send">Send</button><button class="btn needs-net" id="ai-case">Structured case analysis</button><button class="btn s" id="ai-clear">Clear</button></div></div><div id="ai-struct"></div>'}
+function chatUI(){$("chat").innerHTML=HIST.map(function(m){return'<div class="msg '+(m.role==="user"?"u":"a")+'">'+esc(m.show||m.content)+'</div>'}).join("")}
+async function sampleFn(){if(!online())throw{code:"offline"};var s=window.claude?await window.claude.use("sample"):null;if(!s)throw{code:"unavailable"};return s}
+function aiErr(e){var c=e&&e.code;return c==="offline"?"You are offline. The AI copilot needs internet; protocols and calculators still work.":c==="unavailable"?"Claude is not available in this view. Open the page signed in to claude.ai.":c==="not_granted"?"Permission to use Claude was declined.":c==="rate_limited"?"Too many requests. Wait a moment.":"Could not get an answer: "+((e&&e.message)||e)}
+async function aiSend(){if(busy)return;var q=$("aiq").value.trim();if(!q)return;busy=true;$("ai-send").disabled=true;
+ var first=HIST.length===0,content=(first?"You are a senior infectious diseases / family medicine consultant supporting a Malaysian doctor. Be concise, bulleted, practical. Lead with: dangerous? antibiotic yes/no? drug, dose, duration, allergy alternative, safety-net.\n"+KB+"\n"+ctx()+"\n\nQUESTION: ":"")+q;
+ HIST.push({role:"user",content:content,show:q});var a={role:"assistant",content:"…"};HIST.push(a);chatUI();$("aiq").value="";
+ try{var s=await sampleFn(),turns=HIST.slice(0,-1).slice(-8).map(function(m){return{role:m.role,content:m.content}});
+  var out=await s(turns,{modelTier:"default",cache:false,onText:function(t){a.content=t.text;chatUI()}});a.content=out.text;}
+ catch(e){a.content=aiErr(e)}
+ chatUI();busy=false;$("ai-send").disabled=!online();var ad=document.createElement("button");ad.className="btn s";ad.textContent="+ Add answer to case";ad.onclick=function(){addCase("AI copilot",a.content.slice(0,900))};$("chat").appendChild(ad)}
+async function aiCase(){if(busy)return;var q=$("aiq").value.trim();if(!q){toast("Describe the case first");return}busy=true;$("ai-struct").innerHTML='<div class="card"><p class="sub">Analysing the case…</p></div>';
+ try{var s=await sampleFn();var r=await s.json("You are a senior infectious diseases / family medicine consultant supporting a Malaysian doctor. "+KB+"\n"+ctx()+"\nCASE: "+q+"\n\nReturn ONLY a JSON object with keys: condition (string), antibioticIndicated (true/false), confidence ('high'|'medium'|'low'), redFlags (array of strings, empty if none), escalate (true if ED/referral is needed), reasoning (string, 2-4 sentences), regimen (null or object {drug,dose,frequency,duration,instructions}), allergyAlternative (null or string), childDose (null or string with mg/kg and mL guidance), investigations (array), safetyNet (array of strings), followUp (string), stewardshipPearl (string).",{modelTier:"complex",cache:false});
+  var h='<div class="card"><h2>'+esc(r.condition||"Case")+'</h2>'+(r.escalate?'<div class="box r"><b>Escalate / refer</b>'+esc((r.redFlags||[]).join("; ")||"See reasoning")+'</div>':"")+'<div>'+(r.antibioticIndicated?'<span class="tag t-r">Antibiotic indicated</span>':'<span class="tag t-g">No antibiotic</span>')+'<span class="tag t-b">Confidence: '+esc(r.confidence||"-")+'</span></div><h3>Reasoning</h3><p>'+esc(r.reasoning||"")+'</p>';
+  if(r.regimen)h+='<div class="box a"><b>'+esc(r.regimen.drug||"")+'</b>'+esc([r.regimen.dose,r.regimen.frequency,r.regimen.duration].filter(Boolean).join(" · "))+'<br>'+esc(r.regimen.instructions||"")+'</div>';
+  if(r.allergyAlternative)h+='<div class="box b"><b>If allergic</b>'+esc(r.allergyAlternative)+'</div>';if(r.childDose)h+='<div class="box b"><b>Child dose</b>'+esc(r.childDose)+'</div>';
+  if(r.investigations&&r.investigations.length)h+='<h3>Investigations</h3>'+ul(r.investigations);if(r.safetyNet&&r.safetyNet.length)h+='<h3>Safety-net</h3>'+ul(r.safetyNet);
+  h+='<div class="box p"><b>Stewardship pearl</b>'+esc(r.stewardshipPearl||"")+'</div><p class="sub">Follow-up: '+esc(r.followUp||"-")+'</p><button class="btn" id="ai-addc">+ Add to case</button></div>';$("ai-struct").innerHTML=h;
+  $("ai-addc").onclick=function(){addCase("AI case analysis",(r.condition||"")+": "+(r.antibioticIndicated?"antibiotic indicated. ":"no antibiotic. ")+(r.regimen?[r.regimen.drug,r.regimen.dose,r.regimen.frequency,r.regimen.duration].join(" "):"")+" | "+(r.reasoning||""))}}
+ catch(e){$("ai-struct").innerHTML='<div class="box r">'+esc(aiErr(e))+'</div>'}
+ busy=false}
+document.addEventListener("click",function(e){var t=e.target;if(t.id==="ai-send")aiSend();else if(t.id==="ai-case")aiCase();else if(t.id==="ai-clear"){HIST=[];chatUI();$("ai-struct").innerHTML=""}var pq=t.closest("[data-pq]");if(pq){$("aiq").value=pq.dataset.pq}});
+
+/* ================= references ================= */
+function renderRefs(){$("v-refs").innerHTML='<div class="card"><h2>References</h2><ul class="l"><li><b>MOH Malaysia. National Antimicrobial Guideline (NAG)</b>, online edition 2024 (updated Jan 2026): Sections A (adult), B (paediatrics), C (primary care pathways) and Appendix 3 (allergy). sites.google.com/moh.gov.my/nag</li><li>NAG 3rd Edition 2019 and Clinical Pathways 2019 (pharmacy.moh.gov.my)</li><li>McIsaac WJ et al. JAMA 2004;291:1587 (Modified Centor)</li><li>Trubiano JA et al. PEN-FAST. JAMA Intern Med 2020</li><li>Lim WS et al. CURB-65. Thorax 2003</li><li>WHO AWaRe Antibiotic Book 2022</li><li>MOH Dengue CPG (Adults); Guidelines for Adult Immunisation (tetanus); MOH rabies guideline</li><li>Source data: the supplied AntibioticGuard project and the Dose-Ubat-GP paediatric tool</li></ul></div>'+
+ '<div class="card"><h2>What I changed from the source projects</h2><ul class="l"><li>Pharyngitis threshold: NAG treats at modified Centor ≥3.</li><li>CAP outpatient: NAG allows CURB-65 0–1 (the project referred at CRB-65 ≥1).</li><li>Bite wounds: NAG gives 3 days prophylaxis / 5 days treatment (project said 7–10).</li><li>Pyelonephritis: NAG lists IV therapy with culture-guided oral step-down (project gave oral ciprofloxacin or co-amoxiclav as routine).</li><li>Paeds dose: azithromycin once daily (not BD), cefuroxime and cefaclor corrected, prednisolone regimen flagged, age gates and maximum-dose caps added.</li><li>Dental abscess and gastroenteritis details are from general practice (NAG A8 and Pathway C5 not read in full). Verify.</li></ul></div>'+
+ '<div class="card"><h2>Offline copy</h2><p class="sub">Everything except the AI copilot works with no internet. Save this page to your phone to keep it for shifts.</p><button class="btn p" id="offsave">⬇ Download offline copy (.html)</button></div><div class="box a"><b>Disclaimer</b>Unofficial decision-support aid. It does not replace clinical judgement, local antibiograms or the full NAG. Verify doses against the MOH formulary and product label.</div>'}
+document.addEventListener("click",function(e){if(e.target.id==="offsave"){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;download(new Blob([h],{type:"text/html"}),"antibioticguard-my-offline.html")}});
+
+/* ================= init ================= */
+renderHome();renderThroat();renderCond();renderFlow();renderDose();calcDose();renderAllergy();renderLabs();renderCase();renderAI();renderRefs();setMode(MODE);show("home");netUI();
+})();
+</script>
+</body>
+</html>
